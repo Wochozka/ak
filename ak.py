@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-
 import random
 import string
-
 import pandas
-data = pandas.read_csv(" ")
+import argparse
+
+p = argparse.ArgumentParser()
+p.add_argument("input")
+args = p.parse_args()
+data = pandas.read_csv(args.input)
 
 
 def jmeno(jmeno_a_prijmeni: str):
@@ -48,7 +51,7 @@ data["Uživatelské jméno"] = data["Jméno a příjmení"].apply(uzivatelske_jm
 def heslo(delka=10):
     pismena = string.ascii_letters + string.digits
     znaky = string.punctuation
-    vysledne_heslo = "".join(random.choice(pismena) for i in range(delka-2))
+    vysledne_heslo = "".join(random.choice(pismena) for i in range(delka - 2))
     vysledne_heslo = vysledne_heslo.join(random.choice(znaky) for i in range(2))
     vysledne_heslo = str(vysledne_heslo)
     return vysledne_heslo
