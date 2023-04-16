@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-import pandas
-import unidecode
+
 import random
 import string
+import pandas
+import argparse
 
-#data = pandas.read_csv("")
+p = argparse.ArgumentParser()
+p.add_argument("input")
+args = p.parse_args()
+data = pandas.read_csv(args.input)
 
 
 def jmeno(jmeno_a_prijmeni: str):
@@ -24,8 +28,6 @@ def prijmeni(jmeno_a_prijmeni: str):
 
 
 def firemni_email(jmeno_a_prijmeni: str):
-    jmeno_a_prijmeni = unidecode.unidecode(jmeno_a_prijmeni)
-    jmeno_a_prijmeni = jmeno_a_prijmeni.lower()
     rozdelene_jmeno = jmeno_a_prijmeni.split()
     if len(rozdelene_jmeno) == 2:
         return f"{rozdelene_jmeno[0]}.{rozdelene_jmeno[1]}@domena.pripona"
@@ -34,8 +36,6 @@ def firemni_email(jmeno_a_prijmeni: str):
 
 
 def uzivatelske_jmeno(jmeno_a_prijmeni: str):
-    jmeno_a_prijmeni = unidecode.unidecode(jmeno_a_prijmeni)
-    jmeno_a_prijmeni = jmeno_a_prijmeni.lower()
     rozdelene_jmeno = jmeno_a_prijmeni.split()
     if len(rozdelene_jmeno) == 2:
         return f"{rozdelene_jmeno[0]}.{rozdelene_jmeno[1]}"
@@ -43,12 +43,16 @@ def uzivatelske_jmeno(jmeno_a_prijmeni: str):
         return f"{rozdelene_jmeno[0]}-{rozdelene_jmeno[1]}.{rozdelene_jmeno[2]}"
 
 
+data["Jméno"] = data["Jméno a příjmení"].apply(jmeno)
+data["Příjmení"] = data["Jméno a příjmení"].apply(prijmeni)
+data["Firemní e-mail"] = data["Jméno a příjmení"].apply(firemni_email)
+data["Uživatelské jméno"] = data["Jméno a příjmení"].apply(uzivatelske_jmeno)
+
+
 def heslo(delka=10):
     pismena = string.ascii_letters + string.digits
     znaky = string.punctuation
     vysledne_heslo = "".join(random.choice(pismena) for i in range(delka - 2))
     vysledne_heslo = vysledne_heslo.join(random.choice(znaky) for i in range(2))
+    vysledne_heslo = str(vysledne_heslo)
     return vysledne_heslo
-
-# vysledna_data.to_csv("vysledna_data.csv", index=False)ß
-# print(vysledna_data)
